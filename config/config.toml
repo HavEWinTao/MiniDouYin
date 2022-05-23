@@ -1,0 +1,10 @@
+Host = "43.138.10.134"
+Port = 3306
+User = "root"
+Password = "SIsi04200521"
+Database = "douyinMini"
+MaxIdLeConn = 10
+MaxOpenConn = 100
+Debug = false
+IsPlural = true
+TablePrefix = ""
