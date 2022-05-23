@@ -1,10 +1,12 @@
 package controller
 
-var DemoVideos = []Video{
+import "mini-douyin/models"
+
+var DemoVideos = []models.Video{
 	{
 		Id:            1,
 		Author:        DemoUser,
-		PlayUrl:       "https://www.w3schools.com/html/movie.mp4",
+		PlayUrl:       "http://43.138.10.134:8080/static/2_share_3c9f4558b4f64e3769bc8118521e09d3.mp4",
 		CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
 		FavoriteCount: 0,
 		CommentCount:  0,
@@ -15,13 +17,23 @@ var DemoVideos = []Video{
 		Author:        UserFan,
 		PlayUrl:       "http://43.138.10.134:8080/static/2_share_1fde94aa2f4803329cb4be99f15bdace.mp4",
 		CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
+		FavoriteCount: 4,
+		CommentCount:  56,
+		IsFavorite:    true,
+		Title:         "有趣的生物书",
+	},
+	{
+		Id:            3,
+		Author:        DemoUser,
+		PlayUrl:       "http://43.138.10.134:8080/static/2_share_3c9f4558b4f64e3769bc8118521e09d3.mp4",
+		CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
 		FavoriteCount: 0,
 		CommentCount:  0,
 		IsFavorite:    false,
 	},
 }
 
-var DemoComments = []Comment{
+var DemoComments = []models.Comment{
 	{
 		Id:         1,
 		User:       DemoUser,
@@ -30,7 +42,7 @@ var DemoComments = []Comment{
 	},
 }
 
-var DemoUser = User{
+var DemoUser = models.User{
 	Id:            1,
 	Name:          "TestUser",
 	FollowCount:   0,
@@ -38,7 +50,7 @@ var DemoUser = User{
 	IsFollow:      false,
 }
 
-var UserFan = User{
+var UserFan = models.User{
 	Id:            2,
 	Name:          "樊tastic",
 	FollowCount:   10,
