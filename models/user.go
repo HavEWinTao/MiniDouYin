@@ -7,3 +7,16 @@ type User struct {
 	FollowerCount int64  `json:"follower_count,omitempty"`
 	IsFollow      bool   `json:"is_follow,omitempty"`
 }
+
+type UserDao struct {
+	UserId        int64
+	UserName      string
+	Password      string
+	FollowCount   int64
+	FollowerCount int64
+	IsFollow      bool
+}
+
+func (u UserDao) TableName() string {
+	return "users"
+}

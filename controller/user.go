@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"mini-douyin/dao"
 	"mini-douyin/models"
 	. "mini-douyin/models"
 	"net/http"
@@ -31,28 +32,38 @@ var usersLoginInfo = map[string]models.User{
 
 var userIdSequence = int64(1)
 
+//用户注册
+//todo SHA256密码加密
 func Register(c *gin.Context) {
+	//获取用户名、密码
 	username := c.Query("username")
 	password := c.Query("password")
-
-	token := username + password
-
-	if _, exist := usersLoginInfo[token]; exist {
+	//新用户查重
+	if err := dao.FindOneSimple(username); err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 1, StatusMsg: "User already exist"},
+			Response: Response{
+				StatusCode: 1,
+				StatusMsg:  "User already exist",
+			},
 		})
 	} else {
+		//创建新用户
 		atomic.AddInt64(&userIdSequence, 1)
-		newUser := models.User{
-			Id:   userIdSequence,
-			Name: username,
+		newUser := models.UserDao{
+			UserName:      username,
+			Password:      password,
+			FollowCount:   0,
+			FollowerCount: 0,
+			IsFollow:      false,
 		}
-		usersLoginInfo[token] = newUser
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 0},
-			UserId:   userIdSequence,
-			Token:    username + password,
-		})
+		if err := dao.Register(newUser); err != nil {
+			c.JSON(http.StatusOK, UserLoginResponse{
+				Response: Response{StatusCode: 0},
+				UserId:   userIdSequence,
+				Token:    username + password,
+			})
+		}
+
 	}
 }
 
