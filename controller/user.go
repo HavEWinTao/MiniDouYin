@@ -54,7 +54,6 @@ func Register(c *gin.Context) {
 			Password:      password,
 			FollowCount:   0,
 			FollowerCount: 0,
-			IsFollow:      false,
 		}
 		if err := dao.Register(newUser); err != nil {
 			c.JSON(http.StatusOK, UserLoginResponse{

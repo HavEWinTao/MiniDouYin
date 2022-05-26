@@ -14,7 +14,6 @@ type UserDao struct {
 	Password      string
 	FollowCount   int64
 	FollowerCount int64
-	IsFollow      bool
 }
 
 func (u UserDao) TableName() string {
