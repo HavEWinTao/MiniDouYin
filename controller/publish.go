@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"mini-douyin/dao"
 	"mini-douyin/models"
+	"mini-douyin/utils"
 	"net/http"
 	"path/filepath"
 	"time"
@@ -46,7 +47,7 @@ func Publish(c *gin.Context) {
 	video := models.VideoDao{
 		VideoId:       rand.Int63(),
 		AuthorId:      user.Id,
-		PlayUrl:       "http://43.138.10.134:8080/static/" + finalName,
+		PlayUrl:       finalName,
 		CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
 		FavoriteCount: 0,
 		CommentCount:  0,
@@ -54,6 +55,7 @@ func Publish(c *gin.Context) {
 		UploadTime:    time.Now(),
 	}
 	//视频文件的相关信息保存到数据库
+	utils.UploadVideo(data, user.Id)
 	if err := dao.SaveVideo(video); err != nil {
 		c.JSON(http.StatusOK, models.Response{
 			StatusCode: 2, //数据库信息保存失败

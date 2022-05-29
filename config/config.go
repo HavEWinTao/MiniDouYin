@@ -26,7 +26,7 @@ func init() {
 	MysqlConfig = new(mysqlConfig)
 	curPath, _ := os.Getwd()
 	fmt.Println(curPath)
-	_, err := toml.DecodeFile("../config/config.toml", &MysqlConfig)
+	_, err := toml.DecodeFile("./config/config.toml", &MysqlConfig)
 	if err != nil {
 		panic(err)
 	}

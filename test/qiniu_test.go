@@ -8,21 +8,24 @@ import (
 )
 
 func TestUploadVideo(t *testing.T) {
-	fasthttp.ListenAndServe(":8888", func(ctx *fasthttp.RequestCtx) {
+	err := fasthttp.ListenAndServe(":8888", func(ctx *fasthttp.RequestCtx) {
 		//根据参数名获取上传的文件
 		fileHeader, err := ctx.FormFile("file")
 		if err != nil {
 			err.Error()
 			return
 		}
-		utils.UploadVideo(fileHeader)
+		utils.UploadVideo(fileHeader, 2)
 		fmt.Println(fileHeader.Filename, " upload!")
 		return
 	})
+	if err != nil {
+		return
+	}
 }
 
 func TestGetVideoUrl(t *testing.T) {
-	filename := "2_mmexport1647791690810.mp4"
+	filename := "2_share_1fde94aa2f4803329cb4be99f15bdace.mp4"
 	videoUrl := utils.GetVideoUrl(filename)
 	fmt.Println(videoUrl)
 }

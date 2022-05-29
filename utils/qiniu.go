@@ -19,7 +19,7 @@ type MyPutRet struct {
 	Name   string
 }
 
-func UploadVideo(file *multipart.FileHeader) {
+func UploadVideo(file *multipart.FileHeader, userID int64) {
 	accessKey := "4uYOoO9F304PStnjT5V2CYNLXrk8rAHDnT6E13WE"
 	secretKey := "GhkvA1-NjMyYiyjNSUvFFy73R9evynSBAMWf3znH"
 	bucket := "douyin-mini"
@@ -42,14 +42,23 @@ func UploadVideo(file *multipart.FileHeader) {
 			"x:name": "github logo",
 		},
 	}
-	key := "videos/" + file.Filename
+	finalName := fmt.Sprintf("%d_%s", userID, file.Filename)
+	key := "videos/" + finalName
 	data, err := file.Open()
 	if err != nil {
 		return
 	}
-	defer data.Close()
+	defer func(data multipart.File) {
+		err := data.Close()
+		if err != nil {
+
+		}
+	}(data)
 	var dataBytes []byte = make([]byte, file.Size)
-	data.Read(dataBytes)
+	_, err = data.Read(dataBytes)
+	if err != nil {
+		return
+	}
 	err = formUploader.Put(context.Background(), &ret, upToken, key, bytes.NewReader(dataBytes), file.Size, &putExtra)
 	if err != nil {
 		fmt.Println(err)
