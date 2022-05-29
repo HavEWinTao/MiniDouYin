@@ -20,7 +20,6 @@ type VideoDao struct {
 	CoverUrl      string    `gorm:"colum:cover_url"`
 	FavoriteCount int32     `gorm:"colum:favorite_count"`
 	CommentCount  int32     `gorm:"colum:comment_count"`
-	IsFavorite    bool      `gorm:"colum:is_favorite"`
 	Title         string    `gorm:"colum:title"`
 	UploadTime    time.Time `gorm:"colum:upload_time"`
 }

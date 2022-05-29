@@ -47,3 +47,9 @@ kill pid
 test时需要将config的路径改成../为什么我也不知道
 
 正常pwd是mini-douyin，而test时路径是mini-douyin/test
+
+## 注册
+
+判断用户名是否重复好像失效
+
+注册后自动登录
