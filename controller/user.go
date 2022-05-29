@@ -51,6 +51,7 @@ func Register(c *gin.Context) {
 		//密码加了SHA256加密
 		atomic.AddInt64(&userIdSequence, 1)
 		newUser := models.UserDao{
+			UserId:        userIdSequence,
 			UserName:      username,
 			Password:      utils_func.GetSHAEncode(password),
 			FollowCount:   0,
