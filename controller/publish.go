@@ -9,6 +9,7 @@ import (
 	"mini-douyin/utils"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -34,8 +35,8 @@ func Publish(c *gin.Context) {
 	filename := filepath.Base(data.Filename)
 	user := usersLoginInfo[token]
 	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
-	saveFile := filepath.Join("./public/", finalName)
-	//保存视频文件
+	saveFile := filepath.Join("./temp/", finalName)
+	//保存视频文件(temp文件夹，用来截取封面)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
 		c.JSON(http.StatusOK, models.Response{
 			StatusCode: 1, //视频文件保存失败
@@ -43,19 +44,33 @@ func Publish(c *gin.Context) {
 		})
 		return
 	}
+	err = utils.CutCover(finalName)
+	if err != nil {
+		return
+	}
 	title := c.PostForm("title")
+	coverName := strings.Split(filename, ".")[0] + ".jpg"
+	coverName = fmt.Sprintf("%d_%s", user.Id, coverName)
 	video := models.VideoDao{
 		VideoId:       rand.Int63(),
 		AuthorId:      user.Id,
 		PlayUrl:       finalName,
-		CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
+		CoverUrl:      coverName,
 		FavoriteCount: 0,
 		CommentCount:  0,
 		Title:         title,
 		UploadTime:    time.Now(),
 	}
-	//视频文件的相关信息保存到数据库
-	utils.UploadVideo(data, user.Id)
+	//视频文件保存到七牛云
+	err = utils.UploadVideo(data, user.Id)
+	if err != nil {
+		return
+	}
+	//封面保存到七牛云
+	err = utils.UploadCover(finalName)
+	if err != nil {
+		return
+	}
 	if err := dao.SaveVideo(video); err != nil {
 		c.JSON(http.StatusOK, models.Response{
 			StatusCode: 2, //数据库信息保存失败
