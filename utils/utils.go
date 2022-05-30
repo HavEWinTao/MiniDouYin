@@ -1,4 +1,4 @@
-package utils_func
+package utils
 
 import (
 	"crypto/sha256"

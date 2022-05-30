@@ -25,7 +25,13 @@ func TestUploadVideo(t *testing.T) {
 }
 
 func TestGetVideoUrl(t *testing.T) {
-	filename := "2_share_1fde94aa2f4803329cb4be99f15bdace.mp4"
+	filename := "2_share_995bcd6a971dd3bc255d776f843b759e.mp4"
 	videoUrl := utils.GetVideoUrl(filename)
+	fmt.Println(videoUrl)
+}
+
+func TestGetCoverUrl(t *testing.T) {
+	filename := "2_share_995bcd6a971dd3bc255d776f843b759e.jpg"
+	videoUrl := utils.GetCoverUrl(filename)
 	fmt.Println(videoUrl)
 }
