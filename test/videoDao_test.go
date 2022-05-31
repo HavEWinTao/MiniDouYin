@@ -7,10 +7,9 @@ import (
 	"mini-douyin/models"
 	"os"
 	"testing"
-	"time"
 )
 
-func TestVideoDao(t *testing.T) {
+func TestSaveVideo(t *testing.T) {
 	curPath, _ := os.Getwd()
 	fmt.Println(curPath)
 	user := models.User{
@@ -29,10 +28,22 @@ func TestVideoDao(t *testing.T) {
 		FavoriteCount: 0,
 		CommentCount:  0,
 		Title:         "test title",
-		UploadTime:    time.Now(),
 	}
 	err := dao.SaveVideo(video)
 	if err != nil {
 		return
+	}
+}
+
+func TestSelectVideoByID(t *testing.T) {
+	var userId int64
+	userId = 2
+	VideoDaoList, err := dao.SelectVideoByID(userId)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	for i := 0; i < len(VideoDaoList); i++ {
+		fmt.Println(VideoDaoList[i])
 	}
 }
