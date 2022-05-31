@@ -9,8 +9,8 @@ import (
 	"mini-douyin/utils"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
-	"time"
 )
 
 // Publish check token then save upload file to public directory
@@ -59,16 +59,17 @@ func Publish(c *gin.Context) {
 		FavoriteCount: 0,
 		CommentCount:  0,
 		Title:         title,
-		UploadTime:    time.Now(),
 	}
 	//视频文件保存到七牛云
 	err = utils.UploadVideo(data, user.Id)
 	if err != nil {
+		fmt.Println(err.Error())
 		return
 	}
 	//封面保存到七牛云
 	err = utils.UploadCover(finalName)
 	if err != nil {
+		fmt.Println(err.Error())
 		return
 	}
 	if err := dao.SaveVideo(video); err != nil {
@@ -87,10 +88,35 @@ func Publish(c *gin.Context) {
 
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
+	token := c.Query("token")
+	//查询用户
+	user := usersLoginInfo[token]
+	userID := c.Query("user_id")
+	userIDInt64, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		fmt.Println("userID转换失败")
+	}
+	videoDaoList, err := dao.SelectVideoByID(userIDInt64)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	VideoList := make([]models.Video, len(videoDaoList), len(videoDaoList))
+	for i := 0; i < len(videoDaoList); i++ {
+		VideoList[i].Id = videoDaoList[i].VideoId
+		VideoList[i].Author = user
+		VideoList[i].PlayUrl = utils.GetVideoUrl(videoDaoList[i].PlayUrl)
+		fmt.Println(VideoList[i].PlayUrl)
+		VideoList[i].CoverUrl = utils.GetCoverUrl(videoDaoList[i].CoverUrl)
+		VideoList[i].FavoriteCount = videoDaoList[i].FavoriteCount
+		VideoList[i].CommentCount = videoDaoList[i].CommentCount
+		//TODO:is_favorite
+		VideoList[i].IsFavorite = true
+		VideoList[i].Title = videoDaoList[i].Title
+	}
 	c.JSON(http.StatusOK, models.VideoListResponse{
 		Response: models.Response{
 			StatusCode: 0,
 		},
-		VideoList: DemoVideos,
+		VideoList: VideoList,
 	})
 }
