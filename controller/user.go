@@ -39,7 +39,7 @@ func Register(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 	//新用户查重
-	if err := dao.FindOneSimple(username); err != nil {
+	if _, err := dao.UsersLoginInfo(username); err == nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: Response{
 				StatusCode: 1,
@@ -48,7 +48,7 @@ func Register(c *gin.Context) {
 		})
 	} else {
 		//创建新用户
-		//密码加了SHA256加密
+		//密码SHA256加密
 		atomic.AddInt64(&userIdSequence, 1)
 		newUser := models.UserDao{
 			UserId:        userIdSequence,
@@ -75,19 +75,27 @@ func Login(c *gin.Context) {
 	fmt.Println("用户名: ", username)
 	fmt.Println("密码: ", password)
 
-	token := username + password
+	token := username + utils_func.GetSHAEncode(password)
 
-	if user, exist := usersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 0},
-			UserId:   user.Id,
-			Token:    token,
-		})
-	} else {
+	user, err := dao.FindOneSimple(username)
+	if err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
 		})
+	} else {
+		if utils_func.GetSHAEncode(password) == user.Password {
+			c.JSON(http.StatusOK, UserLoginResponse{
+				Response: Response{StatusCode: 0},
+				UserId:   user.UserId,
+				Token:    token,
+			})
+		} else {
+			c.JSON(http.StatusOK, UserLoginResponse{
+				Response: Response{StatusCode: 1, StatusMsg: "Password error"},
+			})
+		}
 	}
+
 }
 
 func UserInfo(c *gin.Context) {

@@ -14,11 +14,21 @@ func Register(user UserDao) error {
 	return nil
 }
 
-// FindOneSimple 查找基本信息
-func FindOneSimple(username string) error {
+// UsersLoginInfo 查重sql
+func UsersLoginInfo(username string) (UserDao, error) {
 	DB := db.GetDB()
-	if err := DB.Where("user_name = ?", username).Error; err != nil {
-		return err
+	var user UserDao
+	err := DB.Where("user_name = ?", username).First(&user).Error
+	return user, err
+}
+
+// FindOneSimple 查找基本信息
+func FindOneSimple(username string) (UserDao, error) {
+	DB := db.GetDB()
+	var user UserDao
+	err := DB.Where("user_name = ?", username).First(&user).Error
+	if err != nil {
+		return user, err
 	}
-	return nil
+	return user, nil
 }
