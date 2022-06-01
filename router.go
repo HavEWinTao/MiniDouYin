@@ -11,6 +11,9 @@ func initRouter(r *gin.Engine) {
 
 	apiRouter := r.Group("/douyin")
 
+	// JWT鉴权中间件
+	//apiRouter.Use(JWTHandler.JwtVerity)
+
 	// basic apis
 	apiRouter.GET("/feed/", controller.Feed)
 	apiRouter.GET("/user/", controller.UserInfo)

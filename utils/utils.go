@@ -3,12 +3,25 @@ package utils
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"github.com/gin-gonic/gin"
 	"io"
 )
 
 // AES加密密钥
 // 用于生成随机密码
 // 必须是16位, 可以优化成动态配置
+
+// GetReturnData 打包数据和Code,Msg
+func GetReturnData(dt interface{}, msgString string) *gin.H {
+	var flag bool
+	if msgString == "SUCCESS" {
+		flag = true
+	} else {
+		flag = false
+	}
+	result := gin.H{"isSuccess": flag, "Data": dt}
+	return &result
+}
 
 // GetSHAEncode 数据加密
 // SHA256加密
