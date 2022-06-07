@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"errors"
 	"mini-douyin/db"
 	. "mini-douyin/models"
 )
@@ -31,4 +32,22 @@ func FindOneSimple(username string) (UserDao, error) {
 		return user, err
 	}
 	return user, nil
+}
+
+// SelectUserByID 根据id查找用户
+func SelectUserByID(id int64) (User, error) {
+	DB := db.GetDB()
+	var user UserDao
+	DB.Where("user_id = ?", id).Find(&user)
+	if DB.Error != nil {
+		var ret User
+		return ret, errors.New("查询用户失败")
+	}
+	return User{
+		Id:            user.UserId,
+		Name:          user.UserName,
+		FollowCount:   user.FollowCount,
+		FollowerCount: user.FollowerCount,
+		IsFollow:      true,
+	}, nil
 }

@@ -35,10 +35,22 @@ func TestSaveVideo(t *testing.T) {
 	}
 }
 
-func TestSelectVideoByID(t *testing.T) {
+//根据用户的id来查找视频
+func TestSelectVideoByUser(t *testing.T) {
 	var userId int64
 	userId = 2
-	VideoDaoList, err := dao.SelectVideoByID(userId)
+	VideoDaoList, err := dao.SelectVideoByUser(userId)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	for i := 0; i < len(VideoDaoList); i++ {
+		fmt.Println(VideoDaoList[i])
+	}
+}
+
+func TestSelectVideo(t *testing.T) {
+	VideoDaoList, err := dao.SelectVideos()
 	if err != nil {
 		fmt.Println(err.Error())
 		return

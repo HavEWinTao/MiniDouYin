@@ -96,27 +96,27 @@ func PublishList(c *gin.Context) {
 	if err != nil {
 		fmt.Println("userID转换失败")
 	}
-	videoDaoList, err := dao.SelectVideoByID(userIDInt64)
+	videoDaoList, err := dao.SelectVideoByUser(userIDInt64)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	VideoList := make([]models.Video, len(videoDaoList), len(videoDaoList))
+	videoList := make([]models.Video, len(videoDaoList), len(videoDaoList))
 	for i := 0; i < len(videoDaoList); i++ {
-		VideoList[i].Id = videoDaoList[i].VideoId
-		VideoList[i].Author = user
-		VideoList[i].PlayUrl = utils.GetVideoUrl(videoDaoList[i].PlayUrl)
-		fmt.Println(VideoList[i].PlayUrl)
-		VideoList[i].CoverUrl = utils.GetCoverUrl(videoDaoList[i].CoverUrl)
-		VideoList[i].FavoriteCount = videoDaoList[i].FavoriteCount
-		VideoList[i].CommentCount = videoDaoList[i].CommentCount
+		videoList[i].Id = videoDaoList[i].VideoId
+		videoList[i].Author = user
+		videoList[i].PlayUrl = utils.GetVideoUrl(videoDaoList[i].PlayUrl)
+		fmt.Println("playUrl: ", videoList[i].PlayUrl)
+		videoList[i].CoverUrl = utils.GetCoverUrl(videoDaoList[i].CoverUrl)
+		videoList[i].FavoriteCount = videoDaoList[i].FavoriteCount
+		videoList[i].CommentCount = videoDaoList[i].CommentCount
 		//TODO:is_favorite
-		VideoList[i].IsFavorite = true
-		VideoList[i].Title = videoDaoList[i].Title
+		videoList[i].IsFavorite = true
+		videoList[i].Title = videoDaoList[i].Title
 	}
 	c.JSON(http.StatusOK, models.VideoListResponse{
 		Response: models.Response{
 			StatusCode: 0,
 		},
-		VideoList: VideoList,
+		VideoList: videoList,
 	})
 }
