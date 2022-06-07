@@ -84,6 +84,13 @@ func Login(c *gin.Context) {
 		})
 	} else {
 		if utils_func.GetSHAEncode(password) == user.Password {
+			usersLoginInfo[token] = User{
+				Id:            user.UserId,
+				Name:          user.UserName,
+				FollowCount:   user.FollowCount,
+				FollowerCount: user.FollowerCount,
+				IsFollow:      false,
+			}
 			c.JSON(http.StatusOK, UserLoginResponse{
 				Response: Response{StatusCode: 0},
 				UserId:   user.UserId,
