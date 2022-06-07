@@ -96,7 +96,7 @@ func PublishList(c *gin.Context) {
 	if err != nil {
 		fmt.Println("userID转换失败")
 	}
-	videoDaoList, err := dao.SelectVideoByID(userIDInt64)
+	videoDaoList, err := dao.SelectVideoByUser(userIDInt64)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

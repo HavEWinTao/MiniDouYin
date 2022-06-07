@@ -16,10 +16,21 @@ func SaveVideo(video VideoDao) error {
 	return nil
 }
 
-func SelectVideoByID(id int64) ([]VideoDao, error) {
+func SelectVideoByUser(id int64) ([]VideoDao, error) {
 	DB := db.GetDB()
 	var videos []VideoDao
 	DB.Where("author_id=?", id).Find(&videos)
+	if DB.Error != nil {
+		fmt.Println(DB.Error.Error())
+		return nil, errors.New("查询视频列表失败")
+	}
+	return videos, nil
+}
+
+func SelectVideos() ([]VideoDao, error) {
+	DB := db.GetDB()
+	var videos []VideoDao
+	DB.Find(&videos)
 	if DB.Error != nil {
 		fmt.Println(DB.Error.Error())
 		return nil, errors.New("查询视频列表失败")
